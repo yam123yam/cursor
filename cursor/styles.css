@@ -1,0 +1,356 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #1a73e8;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.nav-btn {
+    background-color: #1a73e8;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    font-weight: 500;
+}
+
+.nav-btn:hover {
+    background-color: #1557b0;
+}
+
+.controls {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.input-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.input-group input,
+.input-group select,
+.input-group button {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    width: 100%;
+}
+
+.input-group button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 500;
+}
+
+.input-group button:hover {
+    background-color: #1557b0;
+}
+
+.filter-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.filter-group select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: white;
+    cursor: pointer;
+    width: 100%;
+}
+
+.filter-group select:hover {
+    border-color: #1a73e8;
+}
+
+.button-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.button-group button {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 500;
+}
+
+.button-group button:nth-child(1) {
+    background-color: #1a73e8;
+    color: white;
+}
+
+.button-group button:nth-child(2) {
+    background-color: #dc3545;
+    color: white;
+}
+
+.button-group button:nth-child(3),
+.button-group button:nth-child(5) {
+    background-color: #28a745;
+    color: white;
+}
+
+.button-group button:hover {
+    opacity: 0.9;
+}
+
+.attendance-list {
+    margin: 30px 0;
+}
+
+.athlete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    border: 1px solid #eee;
+}
+
+.athlete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.athlete.present {
+    border-left: 4px solid #28a745;
+}
+
+.athlete.absent {
+    border-left: 4px solid #dc3545;
+}
+
+.athlete-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.athlete-main .name {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1em;
+    margin-bottom: 4px;
+}
+
+.athlete-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: #666;
+    font-size: 1em;
+}
+
+.athlete-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 24px;
+    align-items: center;
+}
+
+.athlete-actions .attendance-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: 500;
+    min-width: 100px;
+    transition: background-color 0.3s;
+}
+.athlete-actions .attendance-btn.present {
+    background-color: #28a745;
+    color: white;
+}
+.athlete-actions .attendance-btn.absent {
+    background-color: #dc3545;
+    color: white;
+}
+.athlete-actions .attendance-btn:not(.present):not(.absent) {
+    background-color: #666;
+    color: white;
+}
+.athlete-actions .attendance-btn:hover {
+    opacity: 0.9;
+}
+
+.stats {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-top: 30px;
+    border: 1px solid #eee;
+}
+
+.stats h2 {
+    color: #1a73e8;
+    margin: 0 0 20px 0;
+    font-size: 1.5em;
+}
+
+.stats p {
+    margin: 10px 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.stats span {
+    font-weight: bold;
+    color: #1a73e8;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .controls {
+        padding: 15px;
+    }
+
+    .input-group,
+    .filter-group,
+    .button-group {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .input-group input,
+    .input-group select,
+    .input-group button,
+    .filter-group select,
+    .button-group button {
+        padding: 10px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    .athlete {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: left;
+        padding: 12px;
+    }
+
+    .athlete-actions {
+        flex-direction: row;
+        gap: 10px;
+        margin-left: 0;
+        margin-top: 10px;
+        justify-content: flex-end;
+    }
+
+    .athlete-main .name {
+        font-size: 1.2em;
+    }
+
+    .athlete-details {
+        font-size: 1em;
+        gap: 8px;
+    }
+
+    .stats {
+        padding: 15px;
+    }
+
+    .stats h2 {
+        font-size: 1.3em;
+    }
+
+    .stats p {
+        font-size: 1em;
+    }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .controls {
+        padding: 12px;
+    }
+
+    .input-group,
+    .filter-group,
+    .button-group {
+        gap: 8px;
+    }
+
+    .athlete {
+        padding: 10px;
+    }
+
+    .athlete .name {
+        font-size: 1.1em;
+    }
+
+    .athlete .grade,
+    .athlete .team,
+    .athlete .workout-group {
+        font-size: 0.9em;
+    }
+} 

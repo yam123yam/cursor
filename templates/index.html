@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athlete Attendance Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .athlete {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .athlete.present {
+            background-color: #d4edda;
+        }
+        .athlete.absent {
+            background-color: #f8d7da;
+        }
+        .athlete-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .athlete-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .athlete-actions {
+            margin-top: 5px;
+        }
+        .stats {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .danger-zone {
+            margin-top: 2rem;
+            padding: 1rem;
+            border: 2px dashed #dc3545;
+            border-radius: 0.5rem;
+            background-color: #fff5f5;
+        }
+        .danger-zone h5 {
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Athlete Attendance Tracker</h1>
+            <div>
+                <a href="/stats" class="btn btn-outline-success me-2">Look for Statistics</a>
+                <a href="/import-export" class="btn btn-outline-primary">Import/Export Athletes</a>
+            </div>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="row">
+                <div class="col">
+                    <h5>Total Athletes: <span id="totalAthletes">0</span></h5>
+                </div>
+                <div class="col">
+                    <h5>Present: <span id="presentCount">0</span></h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <select id="gradeFilter" class="form-select">
+                    <option value="">All Grades</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="teamFilter" class="form-select">
+                    <option value="">All Teams</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="groupFilter" class="form-select">
+                    <option value="">All Workout Groups</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="sortBy" class="form-select">
+                    <option value="name">Sort by Name</option>
+                    <option value="grade">Sort by Grade</option>
+                    <option value="team">Sort by Team</option>
+                    <option value="group">Sort by Workout Group</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Add Athlete Form -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Add New Athlete</h5>
+            </div>
+            <div class="card-body">
+                <form id="addAthleteForm" class="row g-3">
+                    <div class="col-md-3">
+                        <input type="text" id="firstName" class="form-control" placeholder="First Name" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" id="lastName" class="form-control" placeholder="Last Name" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" id="grade" class="form-control" placeholder="Grade">
+                    </div>
+                    <div class="col-md-2">
+                        <select id="team" class="form-select" required>
+                            <option value="">Select Team</option>
+                            <option value="Varsity">Varsity</option>
+                            <option value="JV">JV</option>
+                            <option value="A">A</option>
+                            <option value="Dev Squad">Dev Squad</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select id="workoutGroup" class="form-select" required>
+                            <option value="">Select Group</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Add Athlete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Attendance List -->
+        <div id="attendanceList" class="mb-4"></div>
+
+        <!-- Danger Zone -->
+        <div class="danger-zone">
+            <h5><i class="bi bi-exclamation-triangle-fill"></i> Danger Zone</h5>
+            <p class="text-danger mb-3">The following actions cannot be undone. Please be careful.</p>
+            <button onclick="removeAllAthletes()" class="btn btn-danger">Remove All Athletes</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
