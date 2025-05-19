@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athlete Attendance Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a73e8">
+</head>
+<body>
+    <div class="container">
+        <h1>Athlete Attendance Tracker</h1>
+        
+        <div class="nav-buttons">
+            <a href="stats.html" class="nav-btn">View Statistics</a>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <input type="text" id="firstName" placeholder="First Name" required>
+                <input type="text" id="lastName" placeholder="Last Name" required>
+                <select id="gender">
+                    <option value="">Select Gender</option>
+                    <option value="B">Boy</option>
+                    <option value="G">Girl</option>
+                </select>
+                <select id="grade" required>
+                    <option value="">Select Grade</option>
+                    <option value="9">9th Grade</option>
+                    <option value="10">10th Grade</option>
+                    <option value="11">11th Grade</option>
+                    <option value="12">12th Grade</option>
+                </select>
+                <select id="team" required>
+                    <option value="">Select Team</option>
+                    <option value="Varsity">Varsity</option>
+                    <option value="JV">JV</option>
+                    <option value="A">A</option>
+                    <option value="Dev Squad">Dev Squad</option>
+                </select>
+                <select id="workoutGroup" required>
+                    <option value="">Select Workout Group</option>
+                </select>
+                <button onclick="addAthlete()">Add Athlete</button>
+            </div>
+            <div class="filter-group">
+                <select id="gradeFilter" onchange="updateAttendanceList()">
+                    <option value="">All Grades</option>
+                    <option value="9">9th Grade</option>
+                    <option value="10">10th Grade</option>
+                    <option value="11">11th Grade</option>
+                    <option value="12">12th Grade</option>
+                </select>
+                <select id="genderFilter" onchange="updateAttendanceList()">
+                    <option value="">All Genders</option>
+                    <option value="B">Boys</option>
+                    <option value="G">Girls</option>
+                </select>
+                <select id="teamFilter" onchange="updateAttendanceList()">
+                    <option value="">All Teams</option>
+                    <option value="Varsity">Varsity</option>
+                    <option value="JV">JV</option>
+                    <option value="A">A</option>
+                    <option value="Dev Squad">Dev Squad</option>
+                </select>
+                <select id="groupFilter" onchange="updateAttendanceList()">
+                    <option value="">All Workout Groups</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button onclick="toggleAllAttendance()">Toggle All Attendance</button>
+                <button onclick="removeAllAthletes()">Remove All Athletes</button>
+                <button onclick="exportToCSV()">Export to CSV</button>
+                <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="importFromCSV(event)">
+                <button onclick="document.getElementById('csvFile').click()">Import from CSV</button>
+            </div>
+        </div>
+
+        <div class="attendance-list" id="attendanceList">
+            <!-- Athletes will be added here dynamically -->
+        </div>
+
+        <div class="stats">
+            <h2>Attendance Statistics</h2>
+            <p>Total Athletes: <span id="totalAthletes">0</span></p>
+            <p>Present Today: <span id="presentCount">0</span></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+    </script>
+</body>
+</html> 

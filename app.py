@@ -175,5 +175,16 @@ def remove_all_athletes():
 def stats():
     return render_template('stats.html')
 
+@app.route('/api/athletes/<int:index>', methods=['PUT'])
+def update_athlete(index):
+    athletes = load_athletes()
+    if 0 <= index < len(athletes):
+        data = request.json
+        for key in ['firstName', 'lastName', 'grade', 'team', 'workoutGroup']:
+            athletes[index][key] = data.get(key, athletes[index].get(key, ''))
+        save_athletes(athletes)
+        return jsonify(athletes[index])
+    return jsonify({'error': 'Athlete not found'}), 404
+
 if __name__ == '__main__':
     app.run(debug=True) 
