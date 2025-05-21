@@ -1,13 +1,8 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    // Fetch athletes data
+document.addEventListener('DOMContentLoaded', () => {
+    // Load athletes data from localStorage
     let athletes = [];
-    try {
-        const response = await fetch('/api/athletes');
-        athletes = await response.json();
-    } catch (error) {
-        alert('Failed to load athlete data.');
-        return;
-    }
+    const saved = localStorage.getItem('athletes');
+    athletes = saved ? JSON.parse(saved) : [];
 
     // 1. Overall Attendance Over Time (generic: count of present per date)
     const attendanceByDate = {};

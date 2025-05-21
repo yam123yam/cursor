@@ -1,9 +1,10 @@
 {
   "name": "Athlete Attendance Tracker",
   "short_name": "Attendance",
-  "start_url": ".",
+  "description": "Track athlete attendance and manage workout groups",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#f0f2f5",
+  "background_color": "#ffffff",
   "theme_color": "#1a73e8",
   "icons": [
     {

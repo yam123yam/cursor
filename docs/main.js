@@ -174,208 +174,70 @@ function sortAthletes() {
     });
 }
 
-// API Functions
-async function loadAthletes() {
-    try {
-        const response = await fetch('/api/athletes');
-        athletes = await response.json();
-        filteredAthletes = [...athletes];
-        updateFilters();
-        filterAthletes();
-    } catch (error) {
-        console.error('Error loading athletes:', error);
-        alert('Error loading athletes. Please try again.');
-    }
+// Replace API Functions with localStorage versions
+function loadAthletes() {
+    const saved = localStorage.getItem('athletes');
+    athletes = saved ? JSON.parse(saved) : [];
+    filteredAthletes = [...athletes];
+    updateFilters();
+    filterAthletes();
 }
 
-async function addAthlete(event) {
+function saveAthletes() {
+    localStorage.setItem('athletes', JSON.stringify(athletes));
+}
+
+function addAthlete(event) {
     event.preventDefault();
-    
     const athlete = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
         grade: document.getElementById('grade').value,
         team: document.getElementById('team').value,
         workoutGroup: document.getElementById('workoutGroup').value,
-        present: false
+        present: false,
+        attendanceHistory: []
     };
-    
-    try {
-        const response = await fetch('/api/athletes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(athlete)
-        });
-        
-        if (response.ok) {
-            const newAthlete = await response.json();
-            athletes.push(newAthlete);
-            updateFilters();
-            filterAthletes();
-            event.target.reset();
-        } else {
-            throw new Error('Failed to add athlete');
-        }
-    } catch (error) {
-        console.error('Error adding athlete:', error);
-        alert('Error adding athlete. Please try again.');
-    }
+    athletes.push(athlete);
+    saveAthletes();
+    updateFilters();
+    filterAthletes();
+    event.target.reset();
 }
 
-async function toggleAttendance(index) {
-    try {
-        const response = await fetch(`/api/athletes/${index}/attendance`, {
-            method: 'PUT'
-        });
-        
-        if (response.ok) {
-            const updatedAthlete = await response.json();
-            athletes[index] = updatedAthlete;
-            filterAthletes();
-        } else {
-            throw new Error('Failed to update attendance');
-        }
-    } catch (error) {
-        console.error('Error updating attendance:', error);
-        alert('Error updating attendance. Please try again.');
-    }
+function toggleAttendance(index) {
+    athletes[index].present = !athletes[index].present;
+    // Add attendance record
+    if (!athletes[index].attendanceHistory) athletes[index].attendanceHistory = [];
+    athletes[index].attendanceHistory.push({
+        date: new Date().toISOString().split('T')[0],
+        present: athletes[index].present
+    });
+    saveAthletes();
+    filterAthletes();
 }
 
-async function removeAthlete(index) {
+function removeAthlete(index) {
     const athlete = athletes[index];
     const athleteName = getAthleteDisplayName(athlete);
-    
-    // First confirmation
-    if (!confirm(`Are you sure you want to remove ${athleteName}?`)) {
-        return;
-    }
-    
-    // Second confirmation
-    if (!confirm(`This action cannot be undone. Really remove ${athleteName}?`)) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`/api/athletes/${index}`, {
-            method: 'DELETE'
-        });
-        
-        if (response.ok) {
-            athletes.splice(index, 1);
-            updateFilters();
-            filterAthletes();
-        } else {
-            throw new Error('Failed to remove athlete');
-        }
-    } catch (error) {
-        console.error('Error removing athlete:', error);
-        alert('Error removing athlete. Please try again.');
-    }
+    if (!confirm(`Are you sure you want to remove ${athleteName}?`)) return;
+    if (!confirm(`This action cannot be undone. Really remove ${athleteName}?`)) return;
+    athletes.splice(index, 1);
+    saveAthletes();
+    updateFilters();
+    filterAthletes();
 }
 
-async function removeAllAthletes() {
-    // First confirmation
-    if (!confirm('Are you sure you want to remove ALL athletes?')) {
-        return;
-    }
-    
-    // Second confirmation with count
-    if (!confirm(`This will remove ${athletes.length} athletes and cannot be undone. Really proceed?`)) {
-        return;
-    }
-    
-    try {
-        const response = await fetch('/api/athletes/all', {
-            method: 'DELETE'
-        });
-        
-        if (response.ok) {
-            athletes = [];
-            filteredAthletes = [];
-            updateFilters();
-            updateAttendanceList();
-        } else {
-            throw new Error('Failed to remove all athletes');
-        }
-    } catch (error) {
-        console.error('Error removing all athletes:', error);
-        alert('Error removing all athletes. Please try again.');
-    }
+function removeAllAthletes() {
+    if (!confirm('Are you sure you want to remove ALL athletes?')) return;
+    if (!confirm(`This will remove ${athletes.length} athletes and cannot be undone. Really proceed?`)) return;
+    athletes = [];
+    filteredAthletes = [];
+    saveAthletes();
+    updateFilters();
+    updateAttendanceList();
 }
 
-async function importCSV(event) {
-    event.preventDefault();
-    
-    const fileInput = document.getElementById('csvFile');
-    const file = fileInput.files[0];
-    
-    if (!file) {
-        alert('Please select a file to import');
-        return;
-    }
-    
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    try {
-        const response = await fetch('/api/import-csv', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const result = await response.json();
-        
-        if (response.ok) {
-            athletes = result.athletes;
-            updateFilters();
-            filterAthletes();
-            
-            if (result.warnings.length > 0) {
-                alert('Import completed with warnings:\n\n' + result.warnings.join('\n'));
-            } else {
-                alert(result.message);
-            }
-            
-            fileInput.value = '';
-        } else {
-            throw new Error(result.error || 'Failed to import CSV');
-        }
-    } catch (error) {
-        console.error('Error importing CSV:', error);
-        alert('Error importing CSV. Please try again.');
-    }
-}
-
-function exportToCSV() {
-    const headers = ['First Name', 'Last Name', 'Grade', 'Team', 'Workout Group', 'Present'];
-    const rows = athletes.map(athlete => [
-        athlete.firstName,
-        athlete.lastName,
-        athlete.grade || '',
-        athlete.team || '',
-        athlete.workoutGroup || '',
-        athlete.present ? 'Yes' : 'No'
-    ]);
-    
-    const csvContent = [
-        headers.join(','),
-        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-    
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `attendance_export_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
-
-// Add this function to show the edit modal with athlete details
 function showEditAthleteModal(index) {
     const athlete = athletes[index];
     document.getElementById('editAthleteIndex').value = index;
@@ -388,8 +250,7 @@ function showEditAthleteModal(index) {
     modal.show();
 }
 
-// Handle edit form submission
-async function handleEditAthlete(event) {
+function handleEditAthlete(event) {
     event.preventDefault();
     const index = parseInt(document.getElementById('editAthleteIndex').value);
     const updatedAthlete = {
@@ -402,27 +263,11 @@ async function handleEditAthlete(event) {
         present: athletes[index].present,
         attendanceHistory: athletes[index].attendanceHistory || []
     };
-    console.log('Sending updated athlete:', updatedAthlete);
-    try {
-        const response = await fetch(`/api/athletes/${index}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedAthlete)
-        });
-        const result = await response.json();
-        console.log('PUT response:', result);
-        if (response.ok) {
-            athletes[index] = result;
-            updateFilters();
-            filterAthletes();
-            bootstrap.Modal.getInstance(document.getElementById('editAthleteModal')).hide();
-        } else {
-            throw new Error('Failed to update athlete');
-        }
-    } catch (error) {
-        alert('Error updating athlete.');
-        console.error(error);
-    }
+    athletes[index] = updatedAthlete;
+    saveAthletes();
+    updateFilters();
+    filterAthletes();
+    bootstrap.Modal.getInstance(document.getElementById('editAthleteModal')).hide();
 }
 
 // Event Listeners
